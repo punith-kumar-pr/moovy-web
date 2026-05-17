@@ -216,6 +216,22 @@ export function MovieDetailPage() {
 
         <Separator className="my-10" />
 
+        {/* Trailer */}
+        {getYouTubeEmbedUrl(movie.trailerUrl) && (
+          <section className="mb-10">
+            <h2 className="text-2xl font-bold mb-4">Trailer</h2>
+            <div className="relative w-full overflow-hidden rounded-xl bg-muted aspect-video shadow-xl border border-border max-w-5xl">
+              <iframe
+                className="absolute top-0 left-0 w-full h-full"
+                src={getYouTubeEmbedUrl(movie.trailerUrl)!}
+                title={`${movie.title} Trailer`}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+          </section>
+        )}
+
         {/* Cast */}
         {movie.casts?.length > 0 && (
           <section className="mb-10">
@@ -399,4 +415,11 @@ function MovieDetailSkeleton() {
       </div>
     </div>
   );
+}
+
+function getYouTubeEmbedUrl(url: string | null | undefined): string | null {
+  if (!url) return null;
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}` : null;
 }
